@@ -9,6 +9,7 @@ var userRouter = require('./routes/user');
 var hbs=require('express-handlebars');
 var app = express();
 var db=require('./config/connection')
+var session=require('express-session')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +20,7 @@ app.use(fileUpload())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret:"key",cookie:{maxAge:6000000}}))
 app.use(express.static(path.join(__dirname, 'public')));
 db.connect((err)=>{
   if(err) console.log("connection error"+err)
