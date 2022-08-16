@@ -1,29 +1,32 @@
 <section>
-    <div class="container">
-        <div class="row mt-4">
-            <a href="/admin/add-product"class="btn btn-success ms-auto" style="width:auto">Add product</a>
-        </div>
-        <table class="table mt-2">
-  <thead>
-    <tr>
-      <th scope="col">No</th>
-      <th scope="col">Title</th>
-      <th scope="col">Category</th>
-      <th scope="col">Description</th>
-      <th scope="col">Image</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each products}}
-    <tr>
-      <th scope="row">1</th>
-      <td>{{this.Name}}</td>
-      <td>{{this.Category}}</td>
-      <td>{{this.Description}}</td>
-      <td><img src="/product-images/{{this._id}}.jpg"style="width:60px;height:60px" alt=""></td>
-    </tr>
-    {{/each}}    
-  </tbody>
-</table>
+  <div class="container">
+    <div class="row mt-4">
+      <a href="/admin/add-product" class="btn btn-success ms-auto" style="width:auto">Add product</a>
     </div>
-</section>
+    <table class="table mt-2">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Title</th>
+          <th scope="col">Category</th>
+          <th scope="col">Description</th>
+          <th scope="col">Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+        <tr>
+          <th scope="row">1</th>
+          <td>{{this.Name}}</td>
+          <td>{{this.Category}}</td>
+          <td>{{this.Description}}</td>
+          <td><img src="/product-images/{{this._id}}.jpg" style="width:60px;height:60px" alt=""></td>
+          <td>
+            <a href="delete-product/{{this._id}}" class="btn btn-danger" onclick="return confirm('are you want to delete {{this.Name}} ? ')">Delete</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section> 
