@@ -30,6 +30,7 @@ router.post('/add-product', (req, res) => {
 
   })
 })
+
 router.get('/delete-product/:id', (req, res) => {
   //res.send('gdfghjjklk')
   let proId = req.params.id
@@ -38,8 +39,21 @@ router.get('/delete-product/:id', (req, res) => {
     res.redirect('/admin')
   })
 })
-
-
+router.get('/edit-product/:id',async(req,res)=>{
+  let product=await productHelpers.getProductDetails(req.params.id )
+  console.log(product)
+  res.render('admin/edit-product',{product})
+})
+router.post('/edit-product/:id',(req,res)=>{
+  id=req.params.id
+  productHelpers.updateProduct(req.params.id,req.body).then(()=>{
+    res.redirect('/admin')
+    if(req.files.Image){
+      let image=req.files.Image
+      image.mv('./public/product-images/' + id + '.jpg')  
+    }
+  })
+})
 
 
 module.exports = router;
