@@ -11,6 +11,7 @@
             <tbody>
                 {{#each products}}
                 <tr>
+                    {{#each this.product}}
                     <td>
                         <img src="/product-images/{{this._id}}.jpg" style="width: 70px;height:70px"
                             alt="">
@@ -18,9 +19,10 @@
                     <td>
                         {{this.Name}}
                     </td>
+                    {{/each}}
                     <td>
                         <button class="cart-item-count ms-3">-</button>
-                        1
+                        {{this.quantity}}
                         <button class="cart-item-count me-3">+</button>
                     </td>
                     <td>
