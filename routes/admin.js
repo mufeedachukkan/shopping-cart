@@ -10,12 +10,11 @@ router.get('/', function (req, res, next) {
   })
 });
 router.get('/add-product', function (req, res) {
-  //res.send('fdtttt')
   res.render('admin/add-product')
 })
 router.post('/add-product', (req, res) => {
-  console.log(req.body);
-  console.log(req.files.Image);
+  console.log("body ",req.body);
+  console.log("reqfilesImages  ",req.files.Image);
   productHelper.addProduct(req.body, (id) => {
     let image = req.files.Image
     console.log(id);

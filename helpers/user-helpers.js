@@ -51,22 +51,22 @@ module.exports = {
                 console.log("index", proExist)
                 if (proExist != -1) {
                     db.get().collection(collection.CART_COLLECTION)
-                        .updateOne({ 'products.item': objectId(proId) },
+                        .updateOne({ user: objectId(userId), 'products.item': objectId(proId) },
                             {
                                 $inc: { 'products.$.quantity': 1 }
-                            }).then(()=>{
+                            }).then(() => {
                                 resolve()
                             })
                 } else {
                     db.get().collection(collection.CART_COLLECTION)
-                    .updateOne({ user: objectId(userId) },
-                        {
+                        .updateOne({ user: objectId(userId) },
+                            {
 
-                            $push: { products:proObj }
+                                $push: { products: proObj }
 
-                        }).then((response) => {
-                            resolve()
-                        })
+                            }).then((response) => {
+                                resolve()
+                            })
                 }
             } else {
                 let cartObj = {
@@ -86,20 +86,29 @@ module.exports = {
                     $match: { user: objectId(userId) }
                 },
                 {
-                    $unwind:'$products'
+                    $unwind: '$products'
                 },
                 {
-                    $project:{
-                        item:'$products.item',
-                        quantity:'$products.quantity'
+                    $project: {
+                        item: '$products.item',
+                        quantity: '$products.quantity'
                     }
                 },
                 {
-                    $lookup:{
-                        from:collection.PRODUCT_COLLECTION,
-                        localField:'item',
-                        foreignField:'_id',
-                        as:'product'
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'item',
+                        foreignField: '_id',
+                        as: 'product'
+                    }
+                },
+                {
+                    $project: {
+                        item: 1,
+                        quantity: 1,
+                        product: {
+                            $arrayElemAt: ['$product', 0]
+                        }
                     }
                 }
                 // {
@@ -133,5 +142,42 @@ module.exports = {
             }
             resolve(count)
         })
+    },
+    // changeProductQuantity: ({ cartId, proId, count }) => {
+    //     console.log("cart",cartId);
+    //     count=parseInt(count)
+    //     return new Promise(async (resolve, reject) => {
+    //         db.get().collection(collection.CART_COLLECTION)
+    //             .updateOne({_id:objectId(cartId), 'products.item': objectId(proId) },
+    //                 {
+    //                     $inc: { 'products.$.quantity': count }
+    //                 }).then(() => {
+    //                     resolve()
+    //                 })
+    //     })
+    // }
+    changeProductQuantity: (details) => {
+        console.log("details", details);
+        count = parseInt(details.count)
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION)
+                .updateOne({ _id: objectId(details.cart), 'products.item': objectId(details.product) },
+                    {
+                        $inc: { 'products.$.quantity': count }
+                    }).then(() => {
+                        resolve()
+                    })
+        })
     }
+
+    // .then(async (response) => {
+    //     console.log("resp", response)
+    //     let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ _id: objectId(details.cart) })
+    //     if (cart) {
+    //         var quantity = cart.products.find(x => x.item == details.product).quantity
+    //         console.log("quantity", quantity)
+
+    //     }
+    //     resolve(quantity)
+    // })
 }
